@@ -4,6 +4,10 @@ import tkinter.messagebox
 from time import sleep
 from datetime import datetime
 
+import matplotlib.pyplot as plt
+import numpy as np
+from dateutil import parser
+
 import serial
 import serial.tools.list_ports
 
@@ -72,6 +76,22 @@ def listen_to_arduino():
     t.start()
 
 
+def plot_sensor():
+    plot_x = []
+    plot_y = []
+    with open('semaphore_schedule.csv') as file:
+        for line in file:
+                split_data = line.split(",")
+                if "earthquake" in split_data[1]:
+                    print(split_data)
+                    plot_x.append(parser.parse(split_data[0]))
+                    plot_y.append(int(split_data[2]))
+    fig, ax = plt.subplots()
+    ax.plot(plot_x, plot_y, 'b-')
+    ax.xaxis_date()
+    plt.show()
+
+
 if __name__ == '__main__':
     stop_listening_flag = False
     f = open("semaphore_schedule.csv", "a+")
@@ -122,6 +142,9 @@ if __name__ == '__main__':
     stopListeningButton.configure(state=tkinter.DISABLED)
     stopListeningButton.pack(padx=5, pady=10)
 
-    top.protocol("WM_DELETE_WINDOW", on_closing)
+    makePlotButton = tkinter.Button(top, text="Plot Sensor data", command=plot_sensor)
+    makePlotButton.configure(state=tkinter.NORMAL)
+    makePlotButton.pack(padx=5, pady=10)
 
+    top.protocol("WM_DELETE_WINDOW", on_closing)
     top.mainloop()
