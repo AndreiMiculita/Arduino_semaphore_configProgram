@@ -49,8 +49,9 @@ def get_serial(ttid, stop):
             break
         s = ser.readline()
         if s:
-            print(s)  # Read the newest output from the Arduino
-            f.write(str(datetime.now()) + ", " + s.decode("ASCII"))
+            db_line = str(datetime.now()) + ", " + s.decode("ASCII")
+            print(db_line)  # Read the newest output from the Arduino
+            f.write(db_line)
         sleep(.1)  # Delay for one tenth of a second
     f.close()
     print("stopped listening")
@@ -66,7 +67,7 @@ def stop_listening():
 
 
 def listen_to_arduino():
-    sendMessageButton.configure(state=tkinter.DISABLED)
+    # sendMessageButton.configure(state=tkinter.DISABLED)
     stopListeningButton.configure(state=tkinter.NORMAL)
     t.start()
 
@@ -106,7 +107,7 @@ if __name__ == '__main__':
     interval_entry4.pack(padx=5, pady=10, side=tkinter.LEFT)
 
     sendMessageButton = tkinter.Button(top, text="Send Message", command=send_message)
-    sendMessageButton.configure(state=tkinter.DISABLED)
+    # sendMessageButton.configure(state=tkinter.DISABLED)
     sendMessageButton.pack(padx=5, pady=10)
 
     tid = 0
